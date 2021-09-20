@@ -28,8 +28,10 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
 
   /**************************************************************************** */
 
-
   app.get("/filteredimage", async (req, res) => {
+    let fs = require("fs");
+    let path = "/util/tmp";
+
     try {
       const imageUrl = req.query.image_url;
 
@@ -41,9 +43,15 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
       }
 
       const filteredpath = await filterImageFromURL(imageUrl);
-  
-      res.status(200).sendFile(filteredpath);
+      //res.status(200).sendFile(filteredpath);
 
+      let localFiles :Array<string> = [];
+
+      fs.readdirSync(__dirname + path).forEach(function(file: string){
+        localFiles.push(file)
+      })
+     
+      await deleteLocalFiles(localFiles)
     } catch (error) {
       console.log(error);
     }
